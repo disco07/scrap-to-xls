@@ -14,12 +14,12 @@ type Data struct {
 	Name, Title, Company string
 }
 
-func scrap(site string) ([]*Data, error) {
+func scrap(path string) ([]*Data, error) {
 	var data []*Data
 
 	page := 0
 	for page < 211 {
-		res, err := http.Get(site + fmt.Sprintf("=%v", page))
+		res, err := http.Get(path + fmt.Sprintf("=%v", page))
 		if err != nil {
 			return nil, errors.New("unsupported protocol scheme")
 		}
