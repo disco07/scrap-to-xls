@@ -13,12 +13,12 @@ type Data struct {
 	Name, Title, Company string
 }
 
-func scrap() ([]*Data, error) {
+func scrap(site string) ([]*Data, error) {
 	var data []*Data
 
 	page := 0
 	for page < 211 {
-		res, err := http.Get(fmt.Sprintf("https://a3f.fr/fr/annuaire_temp.php?all&depart_annuaire=%v#div-annuaire", page))
+		res, err := http.Get(site + fmt.Sprintf("=%v", page))
 		if err != nil {
 			return nil, err
 		}
@@ -75,7 +75,8 @@ func excelizeData(data []*Data) error {
 }
 
 func main() {
-	data, err := scrap()
+	site := "https://a3f.fr/fr/annuaire_temp.php?all&depart_annuaire"
+	data, err := scrap(site)
 	if err != nil {
 		log.Fatal(err)
 	}
