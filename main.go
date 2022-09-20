@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/xuri/excelize/v2"
@@ -20,7 +21,7 @@ func scrap(site string) ([]*Data, error) {
 	for page < 211 {
 		res, err := http.Get(site + fmt.Sprintf("=%v", page))
 		if err != nil {
-			return nil, err
+			return nil, errors.New("unsupported protocol scheme")
 		}
 		defer res.Body.Close()
 

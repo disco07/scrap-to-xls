@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
 func TestScrap(t *testing.T) {
 	tests := []struct {
@@ -13,12 +16,21 @@ func TestScrap(t *testing.T) {
 			site:        "https://a3f.fr/fr/annuaire_temp.php?all&depart_annuaire",
 			expected:    nil,
 		},
+		{
+			description: "Download data from page not working, invalid url",
+			site:        "",
+			expected:    errors.New("unsupported protocol scheme"),
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
 			_, err := scrap(tt.site)
-			if tt.expected == nil && err != nil {
+			if tt.expected == nil && err != tt.expected {
+				t.Errorf("got %v want %v", err.Error(), tt.expected)
+			}
+
+			if tt.expected != nil && err.Error() != tt.expected.Error() {
 				t.Errorf("got %v want %v", err.Error(), tt.expected)
 			}
 		})
@@ -53,4 +65,8 @@ func TestExcelizeData(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestRunMain(t *testing.T) {
+	main()
 }
