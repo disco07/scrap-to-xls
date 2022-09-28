@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/disco07/progressbar"
 	"github.com/xuri/excelize/v2"
 	"log"
 	"net/http"
@@ -18,6 +19,7 @@ func scrap(path string) ([]*Data, error) {
 	var data []*Data
 
 	page := 0
+	bar := progressbar.New(211)
 	for page < 211 {
 		res, err := http.Get(path + fmt.Sprintf("=%v", page))
 		if err != nil {
@@ -53,6 +55,7 @@ func scrap(path string) ([]*Data, error) {
 			data = append(data, &d)
 		})
 		page += 52
+		bar.Add(52)
 	}
 	return data, nil
 }
@@ -66,6 +69,7 @@ func excelizeData(data []*Data) error {
 		f.SetCellValue("Sheet1", fmt.Sprintf("A%v", i+2), d.Name)
 		f.SetCellValue("Sheet1", fmt.Sprintf("B%v", i+2), d.Title)
 		f.SetCellValue("Sheet1", fmt.Sprintf("C%v", i+2), d.Company)
+
 	}
 	// Save spreadsheet by the given path.
 	if err := f.SaveAs("export_dataframe.xlsx"); err != nil {
