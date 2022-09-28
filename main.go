@@ -19,7 +19,7 @@ func scrap(path string) ([]*Data, error) {
 	var data []*Data
 
 	page := 0
-	bar := progressbar.New(211)
+	bar := progressbar.New(208)
 	for page < 211 {
 		res, err := http.Get(path + fmt.Sprintf("=%v", page))
 		if err != nil {
